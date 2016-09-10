@@ -1,25 +1,30 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: leona
+ * User: Leonardo Zanela
  * Date: 09/09/2016
  * Time: 22:23
  */
 
 namespace CodeEducation\Cart\Tests;
 
-
 use CodeEducation\Cart\Cart;
+use CodeEducation\Cart\Cupom;
 use CodeEducation\Cart\ProductX;
 
+/**
+ * Class CartTest
+ * @package CodeEducation\Cart\Tests
+ */
 class CartTest extends \PHPUnit_Framework_TestCase
 {
 
     public function test_verifica_total_dos_produtos()
     {
 
-        $productX = new ProductX();
-        $productX->setPrice(15);
+        $productX = $this->getMockBuilder(ProductX::class)->getMock();
+        $productX->method('getPrice')->willReturn(15);
+        $productX->method('getName')->willReturn("Product X");
 
         $cart = new Cart();
         $cart->addProduct($productX);
@@ -33,8 +38,9 @@ class CartTest extends \PHPUnit_Framework_TestCase
 
     public function test_se_itens()
     {
-        $productX = new ProductX();
-        $productX->setPrice(15);
+        $productX = $this->getMockBuilder(ProductX::class)->getMock();
+        $productX->method('getPrice')->willReturn(15);
+        $productX->method('getName')->willReturn("Product X");
 
         $cart = new Cart();
         $cart->addProduct($productX);
@@ -49,5 +55,24 @@ class CartTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->assertEquals($itemsExpected, $items);
+    }
+
+    public function test_aplica_cupom_de_desconto()
+    {
+
+        $productX = $this->getMockBuilder(ProductX::class)->getMock();
+        $productX->method('getPrice')->willReturn(15);
+        $productX->method('getName')->willReturn("Product X");
+
+        $cupom = $this->getMockBuilder(Cupom::class)->getMock();
+        $cupom->method('getTotal')->willReturn(10);
+
+        $cart = new Cart();
+        $cart->addProduct($productX);
+        $cart->applyCupom($cupom);
+        $total = $cart->getTotal();
+
+        $this->assertEquals(5, $total);
+
     }
 }

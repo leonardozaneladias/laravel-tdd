@@ -8,12 +8,14 @@
 
 namespace CodeEducation\Cart;
 
-
 class Cart
 {
     private $total;
     private $itens = [];
 
+    /**
+     * @param Product $product
+     */
     public function addProduct(Product $product)
     {
 
@@ -27,11 +29,20 @@ class Cart
         $this->total += $product->getPrice();
     }
 
+    public function applyCupom(Cupom $cupom)
+    {
+        $this->total -= $cupom->getTotal();
+    }
+
+
     public function getTotal()
     {
         return $this->total;
     }
 
+    /**
+     * @return array
+     */
     public function getItens()
     {
         return $this->itens;
